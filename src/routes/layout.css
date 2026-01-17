@@ -1,5 +1,9 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+@import "@fontsource/dm-sans/latin-300.css";
+@import "@fontsource/dm-sans/latin-400.css";
+@import "@fontsource/dm-sans/latin-500.css";
+@import "@fontsource/maple-mono/latin-400.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -39,6 +43,14 @@ body {
 html {
   overflow-y: scroll;
   scroll-behavior: smooth;
+}
+
+.pre,
+.code {
+  font-family: 'Maple Mono', monospace !important;
+  * {
+    font-family: 'Maple Mono', monospace !important;
+  }
 }
 
 article {
