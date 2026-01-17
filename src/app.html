@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="generator" content="SvelteKit" />
+    <script
+      defer
+      src="https://cloud.umami.is/script.js"
+      data-website-id="77eb116e-bb7c-48ed-a281-01837a6ff8f4"
+    ></script>
+    %sveltekit.head%
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">%sveltekit.body%</div>
+  </body>
+  <script>
+    (function () {
+      const saved = localStorage.getItem("theme");
+      const theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      if (theme === "dark") {
+        document.documentElement.classList.add("dark");
+      }
+    })();
+  </script>
+</html>

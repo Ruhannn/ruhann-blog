@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-sans: "DM Sans", sans-serif;
+  --text: #040316;
+  --background: #dedde4;
+  --primary: #343b58;
+  --secondary: #f9f7ff;
+  --accent: #343b58;
+}
+.dark {
+  --text: #eae9fc;
+  --background: #1c1b22;
+  --primary: #7aa2f7;
+  --secondary: #000000;
+  --accent: #7aa2f7;
+}
+
+@theme inline {
+  --color-text: var(--text);
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+}
+
+body {
+  @apply bg-background text-text font-sans;
+}
+
+html,
+body {
+  @apply size-full;
+}
+
+html {
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+article {
+  @apply max-w-full prose dark:prose-invert prose-img:mx-auto prose-img:my-auto my-2 prose-sm bg-background sm:prose-base lg:prose-lg xl:prose-xl;
+  @apply prose-headings:font-semibold prose-strong:text-text prose-td:text-text prose-li:marker:text-text prose-ol:marker:text-text;
+  @apply prose-headings:text-text prose-blockquote:text-text prose-hr:border-accent;
+  @apply prose-img:rounded-xl;
+}
+
+.contains-task-list {
+  list-style-type: none;
+  padding-inline-start: 0;
+
+  .task-list-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+
+    input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      position: relative;
+      background-color: var(--input);
+
+      &:checked {
+        background-color: var(--primary);
+      }
+
+      &:checked::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #e2e2f5;
+        font-size: 15px;
+        font-weight: bold;
+      }
+
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      }
+    }
+  }
+}
+
+article a {
+  @apply font-sans hover:text-primary underline underline-offset-2;
+  @apply decoration-primary/30;
+  @apply transition-colors duration-300 ease-in-out;
+}
+
+.animate {
+  @apply opacity-0 translate-y-3;
+  @apply transition-all duration-700 ease-out;
+}
+
+.animate.show {
+  @apply opacity-100 translate-y-0;
+}
+
+.shiki{
+  background-color: #ededfe !important;
+}
+
+
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  @apply rounded-xl;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
