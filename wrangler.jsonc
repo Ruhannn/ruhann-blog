@@ -4,7 +4,7 @@
  */
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "super-mouse-bd24",
+  "name": "ruhann-blog",
   "main": ".svelte-kit/cloudflare/_worker.js",
   "compatibility_date": "2026-04-24",
   "compatibility_flags": [
