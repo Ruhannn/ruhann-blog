@@ -8,6 +8,11 @@ const config = {
   kit: {
     adapter: adapter(),
   },
+  build: {
+    rollupOptions: {
+      external: ["cloudflare:workers"],
+    },
+  },
 };
 
 export default config;

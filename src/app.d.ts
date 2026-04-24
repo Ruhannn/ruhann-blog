@@ -2,11 +2,15 @@
 // for information about these interfaces
 declare global {
   namespace App {
-    // interface Error {}
-    // interface Locals {}
-    // interface PageData {}
-    // interface PageState {}
-    // interface Platform {}
+    interface Platform {
+      env: {
+        NOTION_TOKEN: string;
+        NOTION_BLOG_DATABASE_ID: string;
+        REDIS_URL: string;
+        PUBLIC_SITE_URL: string;
+        ASSETS: Fetcher;
+      };
+    }
   }
 }
 

@@ -1,7 +1,10 @@
 import type { PageServerLoad } from "./$types";
-import { notion } from "$lib/service/notion";
+import { createNotionService } from "$lib/service/notion";
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ platform }) => {
+  const env = platform!.env;
+
+  const notion = createNotionService(env);
   const blogs = await notion.getBlogs();
 
   return {
