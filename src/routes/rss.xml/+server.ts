@@ -1,10 +1,13 @@
 import type { RequestHandler } from "./$types";
 import { PUBLIC_SITE_URL } from "$env/static/public";
 import { HOME } from "$lib/consts";
-import { notion } from "$lib/service/notion";
+import { createNotionService } from "$lib/service/notion";
+import { env } from "cloudflare:workers";
 import RSS from "rss";
 
 export const GET: RequestHandler = async () => {
+  const notion = createNotionService(env);
+
   const blogs = await notion.getBlogs();
   const items = blogs.sort(
     (a, b) => new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf(),
@@ -16,7 +19,6 @@ export const GET: RequestHandler = async () => {
     site_url: PUBLIC_SITE_URL,
     feed_url: `${PUBLIC_SITE_URL}/rss.xml`,
   });
-
   items.forEach((item) => {
     feed.item({
       title: item.title,
