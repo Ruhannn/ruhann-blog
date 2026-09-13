@@ -1,38 +1,41 @@
 @import "tailwindcss";
-@plugin "@tailwindcss/typography";
-@import "@fontsource/dm-sans/latin-300.css";
 @import "@fontsource/dm-sans/latin-400.css";
 @import "@fontsource/dm-sans/latin-500.css";
-@import "@fontsource/maple-mono/latin-400.css";
 
 @custom-variant dark (&:is(.dark *));
 
+@font-face {
+  font-family: "Maple Mono";
+  src: url("/fonts/MapleMono.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: optional;
+}
+
 :root {
   --font-sans: "DM Sans", sans-serif;
+  --font-mono: "Maple Mono", monospace;
+  --line: color-mix(in srgb, var(--text) 12%, transparent);
+  --muted: color-mix(in srgb, var(--text) 55%, transparent);
   --text: #040316;
   --background: #dedde4;
   --primary: #343b58;
-  --secondary: #f9f7ff;
-  --accent: #343b58;
+
+  /* One easing + one duration for every hover on the site. */
+  --t: 150ms ease-out;
+  --ease-out-quint: cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .dark {
   --text: #eae9fc;
   --background: #1c1b22;
   --primary: #7aa2f7;
-  --secondary: #000000;
-  --accent: #7aa2f7;
 }
 
 @theme inline {
   --color-text: var(--text);
   --color-background: var(--background);
   --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --color-accent: var(--accent);
-}
-
-body {
-  @apply bg-background text-text font-sans;
 }
 
 html,
@@ -45,93 +48,780 @@ html {
   scroll-behavior: smooth;
 }
 
-.pre,
-.code {
-  font-family: 'Maple Mono', monospace !important;
-  * {
-    font-family: 'Maple Mono', monospace !important;
-  }
+body {
+  @apply bg-background text-text font-sans;
 }
 
 article {
-  @apply max-w-full prose dark:prose-invert prose-img:mx-auto prose-img:my-auto my-2 prose-sm bg-background sm:prose-base lg:prose-lg xl:prose-xl;
-  @apply prose-headings:font-semibold prose-strong:text-text prose-td:text-text prose-li:marker:text-text prose-ol:marker:text-text;
-  @apply prose-headings:text-text prose-blockquote:text-text prose-hr:border-accent;
-  @apply prose-img:rounded-xl;
+  margin-top: 1.25em;
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text);
 }
 
-.contains-task-list {
-  list-style-type: none;
-  padding-inline-start: 0;
-
-  .task-list-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.5rem;
-
-    input[type="checkbox"] {
-      appearance: none;
-      -webkit-appearance: none;
-      width: 18px;
-      height: 18px;
-      margin-right: 8px;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      position: relative;
-      background-color: var(--input);
-
-      &:checked {
-        background-color: var(--primary);
-      }
-
-      &:checked::after {
-        content: "✓";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: #e2e2f5;
-        font-size: 15px;
-        font-weight: bold;
-      }
-
-      &:focus {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-      }
-    }
+@media (min-width: 64rem) {
+  article {
+    font-size: 1.125rem;
+    line-height: 1.7778;
   }
 }
 
+article > * + * {
+  margin-top: 1.25em;
+}
+
+article > :first-child {
+  margin-top: 0;
+}
+
+article > :last-child {
+  margin-bottom: 0;
+}
+
+article :is(h1, h2, h3, h4) {
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  scroll-margin-top: 2rem;
+}
+
+article > :is(h1, h2, h3, h4) + * {
+  margin-top: 0.6em;
+}
+
+article h1 {
+  font-size: 1.875em;
+  line-height: 1.2;
+}
+
+article h2 {
+  font-size: 1.5em;
+  margin-top: 2em;
+}
+
+article h3 {
+  font-size: 1.25em;
+  margin-top: 1.6em;
+}
+
+article h4 {
+  font-size: 1em;
+  margin-top: 1.4em;
+}
+
+article :is(strong, b) {
+  font-weight: 600;
+}
+
 article a {
-  @apply font-sans hover:text-primary underline underline-offset-2;
-  @apply decoration-primary/30;
-  @apply transition-colors duration-300 ease-in-out;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: color-mix(in srgb, var(--primary) 30%, transparent);
+  transition: color 300ms ease-in-out;
 }
 
-.animate {
-  @apply opacity-0 translate-y-3;
-  @apply transition-all duration-700 ease-out;
+article a:hover {
+  color: var(--primary);
 }
 
-.animate.show {
-  @apply opacity-100 translate-y-0;
+article :is(ul, ol) {
+  padding-left: 1.5em;
 }
 
-.shiki{
+article ul {
+  list-style: disc;
+}
+
+article ol {
+  list-style: decimal;
+}
+
+article li::marker {
+  color: var(--text);
+}
+
+article li + li,
+article li > ul,
+article li > ol {
+  margin-top: 0.4em;
+}
+
+article blockquote {
+  border-left: 3px solid var(--line);
+  padding-left: 1em;
+  font-style: italic;
+  color: var(--text);
+}
+
+article hr {
+  border: 0;
+  border-top: 1px solid var(--primary);
+}
+
+article :is(pre, code) {
+  font-family: var(--font-mono);
+}
+
+article pre {
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 1em;
+  border-radius: 0.75rem;
+  font-size: 0.875em;
+  line-height: 1.7;
+}
+
+article :not(pre) > code {
+  overflow-wrap: anywhere;
+  font-size: 0.875em;
+  padding: 0.15em 0.35em;
+  border-radius: 0.25rem;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  display: block;
+  overflow-x: auto;
+}
+
+article :is(th, td) {
+  border-bottom: 1px solid var(--line);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+
+article th {
+  font-weight: 600;
+}
+
+article figure {
+  margin: 1.5rem 0;
+}
+
+article figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: center;
+}
+
+article img {
+  height: auto;
+  max-width: 100%;
+  margin-inline: auto;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+.shiki {
   background-color: #ededfe !important;
 }
-
 
 .dark .shiki,
 .dark .shiki span {
   color: var(--shiki-dark) !important;
   background-color: var(--shiki-dark-bg) !important;
-  @apply rounded-xl;
 }
 
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+/* ---------- motion ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes react-pop {
+  40% {
+    transform: scale(1.22);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate {
+    animation: rise 520ms var(--ease-out-quint) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  .react.bump svg {
+    animation: react-pop 260ms var(--ease-out-quint);
+  }
+}
+
+/* ============================================================
+   Site chrome — nav, home, post header.
+   Plain CSS on purpose: no new utilities, no new colours.
+   Everything below reads the tokens already declared above.
+   ============================================================ */
+
+/* Every monospaced label on the site, in one place. */
+.site-nav .mark,
+.kv,
+.sec-label,
+.tag-chips,
+.chip,
+.find-open,
+.find .sig,
+.find input,
+.find .esc,
+.post-row :is(.d, .r),
+.list-empty,
+.back,
+.post-meta,
+.post-foot .lbl,
+.letter-sign,
+.react {
+  font-family: var(--font-mono);
+}
+
+/* Muted text that goes full-strength on hover. */
+.site-nav a:not(.mark),
+.find-open,
+.find .esc,
+.back,
+.chip {
+  color: var(--muted);
+  transition: color var(--t);
+}
+
+.site-nav a:not(.mark):hover,
+.site-nav a[aria-current="page"],
+.find-open:hover,
+.find .esc:hover,
+.back:hover,
+.chip:hover {
+  color: var(--text);
+}
+
+/* Underlined inline links inside prose-free pages. */
+.kv dd a,
+.letter a.in {
+  color: var(--primary);
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  transition: border-color var(--t);
+}
+
+.kv dd a:hover,
+.letter a.in:hover {
+  border-bottom-color: var(--primary);
+}
+
+.chip:focus-visible,
+.react:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* ---------- nav ---------- */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.375rem;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 1.5rem 1.5rem 0;
+  font-size: 0.875rem;
+}
+
+.site-nav .mark {
+  margin-right: auto;
+  letter-spacing: -0.01em;
+}
+
+.site-nav .mark .p {
+  color: var(--primary);
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -0.5rem;
+  transition:
+    background var(--t),
+    transform var(--t);
+}
+
+.theme-toggle:hover {
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.theme-toggle:active {
+  transform: scale(0.92);
+}
+
+.react:active {
+  transform: scale(0.96);
+}
+
+/* ---------- shared column ---------- */
+.shell {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* ---------- home: about ---------- */
+.intro {
+  padding: 3.75rem 0 0;
+}
+
+.intro h1 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  margin: 0 0 0.875rem;
+}
+
+.intro p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  max-width: 62ch;
+}
+
+.kv {
+  margin: 1.375rem 0 0;
+  display: grid;
+  grid-template-columns: 6.25rem 1fr;
+  gap: 0.4375rem 1rem;
+  font-size: 0.84375rem;
+}
+
+.kv dt {
+  color: var(--muted);
+}
+
+.kv dd {
+  margin: 0;
+}
+
+@media (max-width: 28.75rem) {
+  .kv {
+    grid-template-columns: 5.25rem 1fr;
+  }
+}
+
+/* ---------- home: list header + search ---------- */
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: 3.25rem 0 0.625rem;
+  min-height: 2rem;
+}
+
+.sec-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.tag-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.125rem;
+  font-size: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  padding: 0.1875rem 0.5rem;
+  border: 0;
+  border-radius: 0.25rem;
+  background: transparent;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition:
+    color var(--t),
+    background var(--t);
+}
+
+.chip.on {
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.find-open {
+  font-size: 0.75rem;
+  padding: 0.1875rem 0.4375rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.find {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  max-width: 20rem;
+}
+
+.find .sig {
+  font-size: 0.8125rem;
+  color: var(--primary);
+}
+
+.find input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 0.8125rem;
+  color: var(--text);
+  padding: 0.1875rem 0;
+  border-bottom: 1px solid var(--primary);
+}
+
+.find input::placeholder {
+  color: var(--muted);
+}
+
+.find input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.find .esc {
+  font-size: 0.6875rem;
+  padding: 0.125rem 0.3125rem;
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+/* ---------- home: post table ---------- */
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+
+.post-row {
+  display: grid;
+  grid-template-columns: 5.75rem 1fr auto;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.6875rem 0.625rem;
+  margin: 0 -0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.9375rem;
+  transition: background 140ms ease-out;
+}
+
+.post-row:hover,
+.post-row:focus-visible {
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+  outline: none;
+}
+
+.post-row :is(.d, .r) {
+  font-size: 0.78125rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.post-row .t {
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.post-row .r {
+  opacity: 0.65;
+  transition: opacity 140ms ease-out;
+}
+
+.post-row:hover .r {
+  opacity: 1;
+}
+
+/* The description is folded away with a 0fr grid row — one animatable property,
+   no measuring, no JS. It opens on hover and on keyboard focus. */
+.post-row .desc {
+  grid-column: 2 / -1;
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--muted);
+  transition: grid-template-rows 220ms var(--ease-out-quint);
+}
+
+.post-row .desc > span {
+  min-height: 0;
+  max-width: 58ch;
+}
+
+.post-row:is(:hover, :focus-visible) .desc {
+  grid-template-rows: 1fr;
+}
+
+.post-row:is(:hover, :focus-visible) .desc > span {
+  padding-top: 0.375rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-row .desc {
+    transition: none;
+  }
+}
+
+/* No hover to give — a phone — so the description is simply always there. */
+@media (hover: none) {
+  .post-row .desc {
+    grid-template-rows: 1fr;
+  }
+
+  .post-row .desc > span {
+    padding-top: 0.375rem;
+  }
+}
+
+@media (max-width: 34rem) {
+  .post-row {
+    grid-template-columns: 1fr auto;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .post-row .t {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .post-row .desc {
+    grid-column: 1 / -1;
+  }
+}
+
+.list-empty {
+  font-size: 0.8125rem;
+  color: var(--muted);
+  padding: 1.125rem 0.625rem;
+}
+
+/* ---------- post page chrome ----------
+   The article itself is untouched: same max-width, same prose-lg sizes. */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  font-size: 0.8125rem;
+}
+
+.back .ar {
+  transition: transform 180ms var(--ease-out-quint);
+}
+
+.back:hover .ar {
+  transform: translateX(-3px);
+}
+
+.post-head {
+  padding: 1.5rem 0 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.post-head .back {
+  margin-bottom: 1.25rem;
+}
+
+.post-head h1 {
+  font-size: clamp(1.625rem, 4vw, 2.125rem);
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  font-weight: 500;
+  margin: 0 0 0.875rem;
+  max-width: 22ch;
+}
+
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  font-size: 0.78125rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The chip carries its own 0.5rem of padding, which would stack on top of the
+   row gap and push the tags adrift. Pulling the group back by that much lines
+   the first tag's text up on the row's own spacing. */
+.post-tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.125rem;
+  margin-left: -0.5rem;
+}
+
+.post-foot {
+  margin: 3.25rem 0 0;
+  padding: 1.375rem 0 0;
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.25rem;
+}
+
+.post-foot .lbl {
+  font-size: 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.post-foot .nxt {
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  text-align: right;
+  transition: color var(--t);
+}
+
+.post-foot:hover .nxt {
+  color: var(--primary);
+}
+
+.embed {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  margin: 1.5rem 0;
+  border-radius: 0.625rem;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+.embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+figure.video {
+  margin: 1.5rem 0;
+}
+
+figure.video video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 0.625rem;
+  background: color-mix(in srgb, var(--text) 8%, transparent);
+}
+
+/* ---------- about page ---------- */
+.letter {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 4.5rem 1.5rem 0;
+}
+
+.letter h1 {
+  font-size: clamp(1.75rem, 5vw, 2.375rem);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  font-weight: 500;
+  margin: 0 0 1.75rem;
+  max-width: 16ch;
+}
+
+.letter p {
+  margin: 0 0 1.375rem;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+}
+
+.letter p.lead {
+  font-size: 1.1875rem;
+  line-height: 1.65;
+}
+
+.letter-sign {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.125rem;
+  font-size: 0.8125rem;
+}
+
+.letter-sign a {
+  color: var(--primary);
+  transition: opacity var(--t);
+}
+
+.letter-sign a:hover {
+  opacity: 0.7;
+}
+
+/* ---------- reactions ---------- */
+.reactions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2.5rem 0 0;
+}
+
+.react {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4375rem;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    color var(--t),
+    border-color var(--t),
+    background var(--t);
+}
+
+.react:hover {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--text) 26%, transparent);
+}
+
+.react.on {
+  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
 }

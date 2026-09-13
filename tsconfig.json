@@ -4,18 +4,18 @@
     "rewriteRelativeImportExtensions": true,
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "types": [
+      "./src/worker-configuration.d.ts",
+      "node"
+    ],
     "allowJs": true,
     "checkJs": true,
     "strict": true,
     "sourceMap": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-  },
-    "exclude": [
-    "dist",
-    "node_modules"
-  ]
+    "skipLibCheck": true
+  }
   // Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
   // except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
   //

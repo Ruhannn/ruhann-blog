@@ -1,9 +1,15 @@
 import type { Metadata, Site, Socials } from "$lib/types";
 
+export const INFO = {
+  NAME: "Ruhan",
+  FULL_NAME: "Ruhan Rouf",
+  DESCRIPTION: "I build technical things and write down what broke.",
+  EMAIL: "ruhanrouf@proton.me",
+  ABOUT: "I build things for the web, and I write down the parts that broke on the way — which is most of them.",
+};
 
 export const SITE: Site = {
   NAME: "Ruhan's Blogs",
-  EMAIL: "ruhanrouf@proton.me",
 };
 
 export const HOME: Metadata = {

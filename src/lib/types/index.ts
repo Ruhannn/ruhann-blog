@@ -19,9 +19,9 @@ export interface Blog {
   cover: string;
   title: string;
   description: string;
+  tags: string[];
   createdAt: Date | string;
   lastUpdateAt: Date | string;
   slug: string;
   readTime: string;
 }
-

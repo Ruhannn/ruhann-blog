@@ -1,24 +1,32 @@
+import type { PageServerLoad } from "./$types";
 import { createNotionService } from "$lib/service/notion";
 import { error } from "@sveltejs/kit";
 
-export const load = async ({ params, platform}: { params: { slug: string }; platform: App.Platform }) => {
-  const slug = params.slug;
+export const load: PageServerLoad = async ({ params, platform, setHeaders }) => {
   const env = platform!.env;
+  const notion = createNotionService(env);
 
-  if (!slug) {
+  let post;
+  try {
+    post = await notion.getBlogBySlug(params.slug);
+  }
+  catch (e) {
+    console.error("getBlogBySlug failed", params.slug, e);
     throw error(404, "Blog not found");
   }
 
-  try {
-    const notion = createNotionService(env);
+  const [blogs, counters] = await Promise.all([
+    notion.getBlogs(),
+    notion.getCounters(post.data.id),
+  ]);
+  const index = blogs.findIndex(b => b.slug === params.slug);
+  const next = index >= 0 ? blogs[index + 1] ?? null : null;
 
-    const { data, markdown } = await notion.getBlogBySlug(slug);
-    return {
-      data,
-      markdown,
-    };
-  }
-  catch {
-    throw error(500, "Failed to load blog post");
-  }
+  setHeaders({
+    "Cache-Control": "no-store",
+  });
+
+  const ogImage = `/og/${params.slug}.png`;
+
+  return { ...post, next, counters, ogImage };
 };

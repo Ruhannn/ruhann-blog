@@ -75,7 +75,7 @@ function createThemeStore() {
 
     applyTheme(initialTheme, true);
     set(initialTheme);
-    
+
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = (e: MediaQueryListEvent) => {
       const savedTheme = getSavedTheme();

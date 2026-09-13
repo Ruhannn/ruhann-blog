@@ -3,12 +3,9 @@
 declare global {
   namespace App {
     interface Platform {
-      env: {
-        NOTION_TOKEN: string;
-        NOTION_BLOG_DATABASE_ID: string;
-        REDIS_URL: string;
-        PUBLIC_SITE_URL: string;
-        ASSETS: Fetcher;
+      env: Env;
+      context: {
+        waitUntil: (promise: Promise<unknown>) => void;
       };
     }
   }
